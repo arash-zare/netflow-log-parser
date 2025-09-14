@@ -1,0 +1,862 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "$$hashKey": "object:631",
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "PDEE91DDB90597936"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxDataPoints": 200,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": [],
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "database": "default",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "dateColDataType": "date",
+          "dateLoading": false,
+          "dateTimeColDataType": "time_flow_start_ns",
+          "dateTimeType": "DATETIME64",
+          "datetimeLoading": false,
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT\n    t,\n    sum(sumbytes) AS sumbytes\nFROM (\n    SELECT\n        $timeSeries AS t,\n        sum(bytes*sampling_rate) as sumbytes\n    FROM $table\n    WHERE $timeFilter\n    GROUP BY t\n\n    UNION ALL\n\n    SELECT\n        toInt64(intDiv($from+number*$interval, $interval)*$interval*1000) AS t,\n        0 AS sumbytes\n    FROM numbers(intDiv($to-$from, $interval))\n)\nGROUP BY t\nORDER BY t",
+          "group": [],
+          "intervalFactor": 1,
+          "metricColumn": "none",
+          "query": "SELECT\n  toStartOfInterval(ts, INTERVAL 1 minute) AS t,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime($__from/1000) AND toDateTime($__to/1000)\nGROUP BY t\nORDER BY t\n",
+          "rawQuery": "SELECT\n  toStartOfInterval(ts, INTERVAL 1 minute) AS t,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime(1756139236550/1000) AND toDateTime(1756139536550/1000)\nGROUP BY t\nORDER BY t",
+          "refId": "A",
+          "round": "0s",
+          "select": [
+            [
+              {
+                "params": [
+                  "bytes"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "skip_comments": true,
+          "table": "flows_raw",
+          "tableLoading": false,
+          "timeColumn": "date_inserted",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Instant traffic",
+      "type": "timeseries"
+    },
+    {
+      "columns": [],
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "PDEE91DDB90597936"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 7,
+      "links": [],
+      "options": {
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.4.3",
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": ".*_port",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "sumbytes",
+          "thresholds": [],
+          "type": "number",
+          "unit": "decbytes"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "dateTimeType": "DATETIME",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "intervalFactor": 1,
+          "query": "SELECT\n  dst_addr AS dstip,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime($__from/1000) AND toDateTime($__to/1000)\nGROUP BY dstip\nORDER BY sumbytes DESC\nLIMIT 10\n",
+          "rawQuery": "SELECT\n  dst_addr AS dstip,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime(1756139683883/1000) AND toDateTime(1756139983883/1000)\nGROUP BY dstip\nORDER BY sumbytes DESC\nLIMIT 10",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true
+        }
+      ],
+      "title": "Top source IPs",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "PDEE91DDB90597936"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 9,
+      "links": [],
+      "options": {
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.4.3",
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": true
+      },
+      "styles": [
+        {
+          "$$hashKey": "object:1506",
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "$$hashKey": "object:1507",
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "port",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "$$hashKey": "object:1508",
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "sumbytes",
+          "thresholds": [],
+          "type": "number",
+          "unit": "decbytes"
+        },
+        {
+          "$$hashKey": "object:1509",
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "database": "default",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "dateColDataType": "date",
+          "dateLoading": false,
+          "dateTimeColDataType": "time_flow_start_ns",
+          "dateTimeType": "DATETIME64",
+          "datetimeLoading": false,
+          "extrapolate": true,
+          "format": "table",
+          "formattedQuery": "WITH dictGetString('dictionaries.protocols', 'name', toUInt64(proto)) AS protoName\nSELECT\n    if(protoName = '', toString(proto), protoName) || '/' || toString(src_port) as port,\n    sum(bytes*sampling_rate) AS sumbytes\nFROM $table\nWHERE $timeFilter\nGROUP BY port\nORDER BY sumbytes DESC",
+          "group": [],
+          "intervalFactor": 1,
+          "metricColumn": "none",
+          "query": "SELECT\n  concat(toString(proto), '/', toString(src_port)) AS port,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime($__from/1000) AND toDateTime($__to/1000)\nGROUP BY port\nORDER BY sumbytes DESC\nLIMIT 10\n",
+          "rawQuery": "SELECT\n  concat(toString(proto), '/', toString(src_port)) AS port,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime(1756139269927/1000) AND toDateTime(1756139569927/1000)\nGROUP BY port\nORDER BY sumbytes DESC\nLIMIT 10",
+          "refId": "A",
+          "round": "0s",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "skip_comments": true,
+          "table": "flows_raw",
+          "tableLoading": false,
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Top source ports",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "PDEE91DDB90597936"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 10,
+      "links": [],
+      "options": {
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.4.3",
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": ".*_port",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "sumbytes",
+          "thresholds": [],
+          "type": "number",
+          "unit": "decbytes"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "database": "default",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "dateColDataType": "date",
+          "dateLoading": false,
+          "dateTimeColDataType": "time_flow_start_ns",
+          "dateTimeType": "DATETIME64",
+          "datetimeLoading": false,
+          "extrapolate": true,
+          "format": "table",
+          "formattedQuery": "SELECT\n    if(etype = 0x800, IPv4NumToString(reinterpretAsUInt32(substring(reverse(dst_addr), 13,4))), IPv6NumToString(dst_addr)) as dstip,\n    sum(bytes*sampling_rate) AS sumbytes\nFROM $table\nWHERE $timeFilter\nGROUP BY dstip\nORDER BY sumbytes DESC",
+          "group": [],
+          "intervalFactor": 1,
+          "metricColumn": "none",
+          "query": "SELECT\n  dst_addr AS dstip,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime($__from/1000) AND toDateTime($__to/1000)\nGROUP BY dstip\nORDER BY sumbytes DESC\nLIMIT 10\n",
+          "rawQuery": "SELECT\n  dst_addr AS dstip,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime(1756139299032/1000) AND toDateTime(1756139599032/1000)\nGROUP BY dstip\nORDER BY sumbytes DESC\nLIMIT 10",
+          "refId": "A",
+          "round": "0s",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "skip_comments": true,
+          "table": "flows_raw",
+          "tableLoading": false,
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Top destination IPs",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "PDEE91DDB90597936"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "id": 11,
+      "links": [],
+      "options": {
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.4.3",
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": false
+      },
+      "styles": [
+        {
+          "$$hashKey": "object:1428",
+          "alias": "Time",
+          "align": "auto",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "$$hashKey": "object:1429",
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "port",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "$$hashKey": "object:1430",
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "sumbytes",
+          "thresholds": [],
+          "type": "number",
+          "unit": "decbytes"
+        },
+        {
+          "$$hashKey": "object:1431",
+          "alias": "",
+          "align": "auto",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "database": "default",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "dateColDataType": "date",
+          "dateLoading": false,
+          "dateTimeColDataType": "time_flow_start_ns",
+          "dateTimeType": "DATETIME64",
+          "datetimeLoading": false,
+          "extrapolate": true,
+          "format": "table",
+          "formattedQuery": "WITH dictGetString('dictionaries.protocols', 'name', toUInt64(proto)) AS protoName\nSELECT\n    if(protoName = '', toString(proto), protoName) || '/' || toString(dst_port) as port,\n    sum(bytes*sampling_rate) AS sumbytes\nFROM $table\nWHERE $timeFilter\nGROUP BY port\nORDER BY sumbytes DESC",
+          "group": [],
+          "intervalFactor": 1,
+          "metricColumn": "none",
+          "query": "SELECT\n  concat(toString(proto), '/', toString(dst_port)) AS port,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime($__from/1000) AND toDateTime($__to/1000)\nGROUP BY port\nORDER BY sumbytes DESC\nLIMIT 10\n",
+          "rawQuery": "SELECT\n  concat(toString(proto), '/', toString(dst_port)) AS port,\n  sum(bytes) AS sumbytes\nFROM default.flows_raw\nWHERE ts BETWEEN toDateTime(1756139322246/1000) AND toDateTime(1756139622246/1000)\nGROUP BY port\nORDER BY sumbytes DESC\nLIMIT 10",
+          "refId": "A",
+          "round": "0s",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "skip_comments": true,
+          "table": "flows_raw",
+          "tableLoading": false,
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Top destination ports",
+      "transform": "table",
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "revision": 1,
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Traffic (ClickHouse)",
+  "uid": "tkNEAd9Zk",
+  "version": 1,
+  "weekStart": ""
+}
